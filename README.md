@@ -1,5 +1,5 @@
 # ghapi.js
-An extremely low-power JS library for a very small set of Github API's JSONP functionality, written during a 14-inning Mets/Cardinals game almost exclusively to facilitate a joke webpage to display how many new JS framework repositories appeared for the current day.
+An extremely low-power JS library for a very small set of Github API's JSONP functionality, written during a 14-inning Mets/Cardinals game almost exclusively to facilitate a [joke webpage](http://rhoffmann8.github.io/2015/05/20/a-framework-a-day/) to display how many new JS framework repositories appeared for the current day.
 
 Usage:
 
@@ -9,7 +9,6 @@ GHApi.open('/search/repositories')
 	.query('terms to search')
 	.addParam('order', 'desc')
 	.addFilter('language', 'javascript')
-	.addFilter('created', '<2015-05-01')
 	.setCallback(function(meta, data) {
 		// 'this' object contains 'path' and 'params' properties from request
 		console.log(this.path); // "/search/repositories"
