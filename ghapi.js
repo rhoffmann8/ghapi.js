@@ -105,7 +105,7 @@ var GHApi = ( function( window, document, undefined ) {
         // new cb to handle specific request
         window['cors'+_funcCount] = (function(i, req) {
             return function(response) {
-                cb.bind(req)(response.meta, response.data);
+                cb.call(req, response.meta, response.data);
 
                 delete window['cors'+i]; // cleanup
             };
