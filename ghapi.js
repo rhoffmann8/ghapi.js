@@ -1,6 +1,6 @@
 /**
  * ghapi.js
- * http://github.com/rhoffmann8/ghtpi.js
+ * http://github.com/rhoffmann8/ghapi.js
  *
  * An extremely low-power wrapper library for (some of) Github API's JSONP functionality.
  * This was written for the sole purpose of facilitating a joke webpage polling GH to check
