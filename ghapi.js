@@ -15,114 +15,114 @@
 
 var GHApi = ( function( window, document, undefined ) {
 
-	var _path,
-		_query,
-		_params = {},
-		_filters = {},
-		_callback = null,
-		_funcCount = 0;
+    var _path,
+        _query,
+        _params = {},
+        _filters = {},
+        _callback = null,
+        _funcCount = 0;
 
-	var addParam = function(param, value) {
-		return ( _params[param] = value, this );
-	};
+    var addParam = function(param, value) {
+        return ( _params[param] = value, this );
+    };
 
-	var clearParams = function() {
-		return ( _params = {}, this );
-	}
+    var clearParams = function() {
+        return ( _params = {}, this );
+    }
 
-	// filtering
-	var addFilter = function(param, value) {
-		return ( _filters[param] = value, this );
-	};
+    // filtering
+    var addFilter = function(param, value) {
+        return ( _filters[param] = value, this );
+    };
 
-	var clearFilters = function() {
-		return ( _filters = {}, this );
-	};
+    var clearFilters = function() {
+        return ( _filters = {}, this );
+    };
 
-	// 'q' param
-	var query = function(queryText) {
-		return ( _params.q = queryText.split(' ').join('+'), this );
-	};
+    // 'q' param
+    var query = function(queryText) {
+        return ( _params.q = queryText.split(' ').join('+'), this );
+    };
 
-	var setCallback = function(cb) {
-		return ( _callback = cb, this );
-	};
+    var setCallback = function(cb) {
+        return ( _callback = cb, this );
+    };
 
-	// set endpoint
-	var open = function(path) {
-		if (!path) {
-			throw new Error('path cannot be empty!');
-		}
+    // set endpoint
+    var open = function(path) {
+        if (!path) {
+            throw new Error('path cannot be empty!');
+        }
 
-		return ( _path = path, this );
-	};
+        return ( _path = path, this );
+    };
 
-	// args passed in this call override any set in object members
-	var submit = function(path, params, filters, cb) {
-		return ( _api(path, params, filters, cb), this );
-	};
+    // args passed in this call override any set in object members
+    var submit = function(path, params, filters, cb) {
+        return ( _api(path, params, filters, cb), this );
+    };
 
-	var _parseParams = function(params, filters) {
-		var q = 'q=' + (params.q || _query),
-			queryParams = [],
-			tmpParams = [],
-			tmpFilters = [];
+    var _parseParams = function(params, filters) {
+        var q = 'q=' + (params.q || _query),
+            queryParams = [],
+            tmpParams = [],
+            tmpFilters = [];
 
-		for (var prop in params) {
-			if (prop == 'q') continue;
-			tmpParams.push(prop + '=' + params[prop]);
-		}
+        for (var prop in params) {
+            if (prop == 'q') continue;
+            tmpParams.push(prop + '=' + params[prop]);
+        }
 
-		for (var prop in filters) {
-			tmpFilters.push(prop + ':' + filters[prop]);
-		}
+        for (var prop in filters) {
+            tmpFilters.push(prop + ':' + filters[prop]);
+        }
 
-		if (tmpFilters.length) {
-			q += '+' + tmpFilters.join('+');
-		}
+        if (tmpFilters.length) {
+            q += '+' + tmpFilters.join('+');
+        }
 
-		queryParams.push(q);
-		if (tmpParams.length) queryParams.push(tmpParams.join('&'));
+        queryParams.push(q);
+        if (tmpParams.length) queryParams.push(tmpParams.join('&'));
 
-		// join params and filters
-		queryParams = queryParams.join('&').replace(' ', '+');
+        // join params and filters
+        queryParams = queryParams.join('&').replace(' ', '+');
 
-		return queryParams;
-	}
+        return queryParams;
+    }
 
-	var _api = function(path, params, filters, cb) {
-		var script = document.createElement('script'),
-			cb = cb || _callback,
-			request = {
-				path: 	path || _path,
-				params: _parseParams(params || _params, filters || _filters)
-			};
+    var _api = function(path, params, filters, cb) {
+        var script = document.createElement('script'),
+            cb = cb || _callback,
+            request = {
+                path:     path || _path,
+                params: _parseParams(params || _params, filters || _filters)
+            };
 
-		if (!cb) {
-			throw new Error('callback must be set!');
-		}
+        if (!cb) {
+            throw new Error('callback must be set!');
+        }
 
-		// new cb to handle specific request
-		window['cors'+_funcCount] = (function(i, req) {
-			return function(response) {
-				cb.bind(req)(response.meta, response.data);
+        // new cb to handle specific request
+        window['cors'+_funcCount] = (function(i, req) {
+            return function(response) {
+                cb.bind(req)(response.meta, response.data);
 
-				delete window['cors'+i]; // cleanup
-			};
-		})(_funcCount, request);
+                delete window['cors'+i]; // cleanup
+            };
+        })(_funcCount, request);
 
-		script.src = '//api.github.com' + request.path + '?callback=cors'+(_funcCount++)+(request.params.length ? '&' + request.params : '');
-		document.getElementsByTagName('head')[0].appendChild(script);
-	};
+        script.src = '//api.github.com' + request.path + '?callback=cors'+(_funcCount++)+(request.params.length ? '&' + request.params : '');
+        document.getElementsByTagName('head')[0].appendChild(script);
+    };
 
-	return {
-		addParam: addParam,
-		addFilter: addFilter,
-		clearFilters, clearFilters,
-		open: open,
-		query: query,
-		setCallback: setCallback,
-		submit: submit
-	};
+    return {
+        addParam: addParam,
+        addFilter: addFilter,
+        clearFilters, clearFilters,
+        open: open,
+        query: query,
+        setCallback: setCallback,
+        submit: submit
+    };
 
 })( this, this.document );
