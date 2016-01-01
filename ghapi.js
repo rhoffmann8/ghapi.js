@@ -118,7 +118,7 @@ var GHApi = ( function( window, document, undefined ) {
     return {
         addParam: addParam,
         addFilter: addFilter,
-        clearFilters, clearFilters,
+        clearFilters: clearFilters,
         open: open,
         query: query,
         setCallback: setCallback,
